@@ -1,0 +1,122 @@
+.section {
+  background: #faf7f2;
+  padding: 4rem 2rem 5rem;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a0f08;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding-bottom: 2.5rem;
+}
+
+.rowReverse {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding-top: 2.5rem;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(139, 100, 60, 0.15);
+}
+
+/* Image wrapper — extra space for the SVG lines */
+.imageFrame {
+  position: relative;
+  flex-shrink: 0;
+  width: 260px;
+  padding-left: 16px;
+  padding-bottom: 16px;
+}
+
+.imageFrameRight {
+  position: relative;
+  flex-shrink: 0;
+  width: 260px;
+  padding-right: 16px;
+  padding-bottom: 16px;
+}
+
+.image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+/* SVG line overlay */
+.frameLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.textBlock {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.body {
+  font-size: 0.85rem;
+  line-height: 1.85;
+  color: #6b6460;
+}
+
+.exploreBtn {
+  margin-top: 0.5rem;
+  align-self: flex-start;
+  background: #2c1206;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.75rem 1.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f5e6c8;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.exploreBtn:hover {
+  background: #5c2d0a;
+}
+
+@media (max-width: 768px) {
+  .row,
+  .rowReverse {
+    flex-direction: column;
+  }
+  .imageFrame,
+  .imageFrameRight {
+    width: 100%;
+  }
+  .image {
+    height: 220px;
+  }
+}
