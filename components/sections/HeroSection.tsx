@@ -1,10 +1,17 @@
-import Link from "next/link";
+"use client";
+
+import { useState } from "react";
+import { FEATURED_DRINKS } from "@/constants";
+import { Drink } from "@/types";
+import OrderModal from "@/components/ui/OrderModal";
 import styles from "./HeroSection.module.css";
 
 export default function HeroSection() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
+
   return (
     <section id="home" className={styles.hero}>
-      {/* Video Background */}
       <video
         className={styles.videoBg}
         autoPlay
@@ -20,7 +27,6 @@ export default function HeroSection() {
       <div className={styles.overlay} />
 
       <div className={styles.content}>
-        {/* Left */}
         <div className={styles.left}>
           <p className={styles.eyebrow}>Welcome to your daily ritual</p>
           <h1 className={styles.heading}>
@@ -34,9 +40,12 @@ export default function HeroSection() {
           </p>
           <div className={styles.buttons}>
             <button className={styles.primaryBtn}>Order now</button>
-            <Link href="#menu" className={styles.secondaryBtn}>
+            <button
+              className={styles.secondaryBtn}
+              onClick={() => setMenuOpen(true)}
+            >
               View menu
-            </Link>
+            </button>
           </div>
           <div className={styles.socials}>
             <SocialLink href="#" type="instagram" />
@@ -45,7 +54,6 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Right */}
         <div className={styles.right}>
           <div className={styles.glow} />
           <video
@@ -59,6 +67,61 @@ export default function HeroSection() {
           <p className={styles.tagline}>Brewed for more than taste.</p>
         </div>
       </div>
+
+      {/* Menu Modal */}
+      {menuOpen && (
+        <div className={styles.modalBackdrop} onClick={() => setMenuOpen(false)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <div>
+                <p className={styles.modalEyebrow}>Our Selection</p>
+                <h2 className={styles.modalTitle}>Featured Brews</h2>
+              </div>
+              <button className={styles.modalClose} onClick={() => setMenuOpen(false)}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+
+            <div className={styles.modalGrid}>
+              {FEATURED_DRINKS.map((drink) => (
+                <div key={drink.id} className={styles.modalCard}>
+                  <img
+                    src={drink.image}
+                    alt={drink.name}
+                    className={styles.modalCardImage}
+                  />
+                  <div className={styles.modalCardBody}>
+                    <div className={styles.modalCardTop}>
+                      <h3 className={styles.modalCardName}>{drink.name}</h3>
+                      <span className={styles.modalCardPrice}>{drink.price}</span>
+                    </div>
+                    <p className={styles.modalCardDesc}>{drink.description}</p>
+                    <button
+                      className={styles.modalCardBtn}
+                      onClick={() => {
+                        setMenuOpen(false);
+                        setSelectedDrink(drink);
+                      }}
+                    >
+                      Order this
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Order Modal */}
+      {selectedDrink && (
+        <OrderModal
+          drink={selectedDrink}
+          onClose={() => setSelectedDrink(null)}
+        />
+      )}
     </section>
   );
 }
