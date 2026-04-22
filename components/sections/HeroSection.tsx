@@ -5,6 +5,19 @@ import styles from "./HeroSection.module.css";
 export default function HeroSection() {
   return (
     <section id="home" className={styles.hero}>
+      {/* Video Background */}
+      <video
+        className={styles.videoBg}
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="/hero-coffee/poster.jpg"
+      >
+        <source src="/hero-coffee/background.mp4" type="video/mp4" />
+        <source src="/hero-coffee/background.webm" type="video/webm" />
+      </video>
+
       <div className={styles.overlay} />
       <Navbar />
 
@@ -37,10 +50,13 @@ export default function HeroSection() {
         {/* Right */}
         <div className={styles.right}>
           <div className={styles.glow} />
-          <img
-            src="/hero-coffee/coffenobg.png"
-            alt="Signature Black Bean Coffee"
-            className={styles.heroImage}
+          <video
+            src="/hero-coffee/coffevid.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={styles.heroVideo}
           />
           <p className={styles.tagline}>Brewed for more than taste.</p>
         </div>
@@ -52,14 +68,7 @@ export default function HeroSection() {
 function SocialLink({ href, type }: { href: string; type: string }) {
   const icons: Record<string, React.ReactNode> = {
     instagram: (
-      <svg
-        width="17"
-        height="17"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <rect x="2" y="2" width="20" height="20" rx="5" />
         <circle cx="12" cy="12" r="5" />
         <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
