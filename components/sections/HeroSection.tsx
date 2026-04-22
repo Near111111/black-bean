@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
 import styles from "./HeroSection.module.css";
 
 export default function HeroSection() {
@@ -19,7 +18,6 @@ export default function HeroSection() {
       </video>
 
       <div className={styles.overlay} />
-      <Navbar />
 
       <div className={styles.content}>
         {/* Left */}
