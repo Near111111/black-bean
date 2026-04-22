@@ -13,7 +13,7 @@ export default function FeaturedSection() {
           <p className={styles.subtitle}>The flavors that define us.</p>
         </div>
         <div className={styles.grid}>
-          {FEATURED_DRINKS.map((drink) => (
+          {FEATURED_DRINKS.slice(0, 3).map((drink) => (
             <DrinkCard key={drink.id} drink={drink} />
           ))}
         </div>
