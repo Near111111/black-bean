@@ -1,3 +1,5 @@
+"use client";
+
 import DrinkCard from "@/components/ui/DrinkCard";
 import { FEATURED_DRINKS } from "@/constants";
 import styles from "./FeaturedSection.module.css";
