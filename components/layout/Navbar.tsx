@@ -19,6 +19,9 @@ export default function Navbar() {
       </div>
 
       <div className={styles.auth}>
+        <Link href="/admin" className={styles.loginBtn}>
+          Admin
+        </Link>
         <button className={styles.loginBtn}>Login</button>
         <button className={styles.signupBtn}>Sign up</button>
       </div>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Drink } from "@/types";
 import styles from "./OrderModal.module.css";
 
-type Step = "order" | "payment" | "receipt";
+type Step = "fulfillment" | "order" | "payment" | "receipt";
 
 const SIZE_OPTIONS = ["Small", "Medium", "Large"] as const;
 const SIZE_UPCHARGE: Record<string, number> = {
@@ -18,6 +18,13 @@ const ADDONS = [
   { label: "Oat Milk", price: 0.75 },
   { label: "Whipped Cream", price: 0.5 },
   { label: "Vanilla Syrup", price: 0.5 },
+];
+
+const DELIVERY_TIME_OPTIONS = [
+  { label: "ASAP", sublabel: "25–35 min" },
+  { label: "30 min", sublabel: "Scheduled" },
+  { label: "1 hour", sublabel: "Scheduled" },
+  { label: "Custom", sublabel: "Pick a time" },
 ];
 
 function generateOrderId() {
@@ -34,7 +41,12 @@ interface Props {
 }
 
 export default function OrderModal({ drink, onClose }: Props) {
-  const [step, setStep] = useState<Step>("order");
+  const [step, setStep] = useState<Step>("fulfillment");
+  const [fulfillment, setFulfillment] = useState<"dine-in" | "delivery" | null>(null);
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [deliveryTime, setDeliveryTime] = useState("ASAP");
+  const [customTime, setCustomTime] = useState("");
+
   const [size, setSize] = useState("Medium");
   const [qty, setQty] = useState(1);
   const [addons, setAddons] = useState<string[]>([]);
@@ -45,7 +57,7 @@ export default function OrderModal({ drink, onClose }: Props) {
   const [card, setCard] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
-  const [method, setMethod] = useState<"card" | "gcash" | "cash">("card");
+  const [method, setMethod] = useState<"card" | "cash">("card");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [orderId] = useState(generateOrderId);
@@ -67,6 +79,15 @@ export default function OrderModal({ drink, onClose }: Props) {
   const tax = subtotal * 0.12;
   const total = subtotal + tax;
 
+  const isFulfillmentValid =
+    fulfillment === "dine-in" ||
+    (fulfillment === "delivery" &&
+      deliveryAddress.trim().length > 0 &&
+      (deliveryTime !== "Custom" || customTime.trim().length > 0));
+
+  const displayDeliveryTime =
+    deliveryTime === "Custom" ? customTime : deliveryTime;
+
   function toggleAddon(label: string) {
     setAddons((prev) =>
       prev.includes(label) ? prev.filter((a) => a !== label) : [...prev, label],
@@ -80,6 +101,7 @@ export default function OrderModal({ drink, onClose }: Props) {
       .replace(/(.{4})/g, "$1 ")
       .trim();
   }
+
   function formatExpiry(val: string) {
     const clean = val.replace(/\D/g, "").slice(0, 4);
     return clean.length > 2 ? clean.slice(0, 2) + "/" + clean.slice(2) : clean;
@@ -95,9 +117,6 @@ export default function OrderModal({ drink, onClose }: Props) {
       if (expiry.length < 5) e.expiry = "Enter expiry MM/YY";
       if (cvv.length < 3) e.cvv = "Enter 3-digit CVV";
     }
-    if (method === "gcash") {
-      if (!name.trim()) e.name = "Name is required";
-    }
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -109,6 +128,105 @@ export default function OrderModal({ drink, onClose }: Props) {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+
+        {/* ── Step: FULFILLMENT ── */}
+        {step === "fulfillment" && (
+          <>
+            <div className={styles.header}>
+              <div className={styles.headerText} style={{ paddingLeft: 0 }}>
+                <p className={styles.eyebrow}>How are you having it?</p>
+                <h2 className={styles.drinkName}>Choose order type</h2>
+              </div>
+              <button className={styles.close} onClick={onClose}>
+                ✕
+              </button>
+            </div>
+
+            <div className={styles.body}>
+              <div className={styles.methodRow}>
+                <button
+                  className={`${styles.methodBtn} ${fulfillment === "dine-in" ? styles.methodActive : ""}`}
+                  onClick={() => setFulfillment("dine-in")}
+                >
+                  🍽 Dine In
+                </button>
+                <button
+                  className={`${styles.methodBtn} ${fulfillment === "delivery" ? styles.methodActive : ""}`}
+                  onClick={() => setFulfillment("delivery")}
+                >
+                  🛵 Delivery
+                </button>
+              </div>
+
+              {fulfillment === "dine-in" && (
+                <p className={styles.gcashNote} style={{ marginTop: "1rem" }}>
+                  Enjoy your order at the café. No wait time estimate needed. ☕
+                </p>
+              )}
+
+              {fulfillment === "delivery" && (
+                <>
+                  {/* Address */}
+                  <div className={styles.field} style={{ marginTop: "1rem" }}>
+                    <label className={styles.label}>Delivery Address</label>
+                    <input
+                      className={styles.input}
+                      placeholder="123 Kalayaan Ave, Quezon City"
+                      value={deliveryAddress}
+                      onChange={(e) => setDeliveryAddress(e.target.value)}
+                    />
+                  </div>
+
+                  {/* Delivery time */}
+                  <div className={styles.field} style={{ marginTop: "1rem" }}>
+                    <label className={styles.label}>Delivery Time</label>
+                    <div className={styles.sizeRow}>
+                      {DELIVERY_TIME_OPTIONS.map((opt) => (
+                        <button
+                          key={opt.label}
+                          className={`${styles.sizeBtn} ${deliveryTime === opt.label ? styles.sizeBtnActive : ""}`}
+                          onClick={() => setDeliveryTime(opt.label)}
+                        >
+                          {opt.label}
+                          <span className={styles.upcharge}>{opt.sublabel}</span>
+                        </button>
+                      ))}
+                    </div>
+
+                    {deliveryTime === "Custom" && (
+                      <input
+                        className={styles.input}
+                        style={{ marginTop: "0.75rem" }}
+                        type="time"
+                        value={customTime}
+                        onChange={(e) => setCustomTime(e.target.value)}
+                      />
+                    )}
+
+                    <p className={styles.gcashNote} style={{ marginTop: "0.5rem" }}>
+                      {deliveryTime === "ASAP"
+                        ? "Estimated delivery: 25–35 min. Delivery fee may apply. 🛵"
+                        : deliveryTime === "Custom"
+                        ? "We'll have your order ready at your chosen time. 🛵"
+                        : `Your order will arrive in approximately ${deliveryTime}. 🛵`}
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className={styles.footer}>
+              <button
+                className={styles.primaryBtn}
+                disabled={!isFulfillmentValid}
+                onClick={() => setStep("order")}
+              >
+                Continue to Order →
+              </button>
+            </div>
+          </>
+        )}
+
         {/* ── Step: ORDER ── */}
         {step === "order" && (
           <>
@@ -209,12 +327,20 @@ export default function OrderModal({ drink, onClose }: Props) {
                 <span className={styles.totalAmt}>${total.toFixed(2)}</span>
               </div>
               <p className={styles.taxNote}>Incl. 12% VAT</p>
-              <button
-                className={styles.primaryBtn}
-                onClick={() => setStep("payment")}
-              >
-                Proceed to Payment →
-              </button>
+              <div className={styles.btnRow}>
+                <button
+                  className={styles.backBtn}
+                  onClick={() => setStep("fulfillment")}
+                >
+                  ← Back
+                </button>
+                <button
+                  className={styles.primaryBtn}
+                  onClick={() => setStep("payment")}
+                >
+                  Proceed to Payment →
+                </button>
+              </div>
             </div>
           </>
         )}
@@ -283,14 +409,13 @@ export default function OrderModal({ drink, onClose }: Props) {
               <div className={styles.field}>
                 <label className={styles.label}>Payment Method</label>
                 <div className={styles.methodRow}>
-                  {(["card", "gcash", "cash"] as const).map((m) => (
+                  {(["card", "cash"] as const).map((m) => (
                     <button
                       key={m}
                       className={`${styles.methodBtn} ${method === m ? styles.methodActive : ""}`}
                       onClick={() => setMethod(m)}
                     >
-                      {m === "card" && "💳 Card"}
-                      {m === "gcash" && "📱 GCash"}
+                      {m === "card" && "💳 Online Payment"}
                       {m === "cash" && "💵 Cash"}
                     </button>
                   ))}
@@ -343,20 +468,6 @@ export default function OrderModal({ drink, onClose }: Props) {
                     </div>
                   </div>
                 </>
-              )}
-
-              {method === "gcash" && (
-                <div className={styles.gcashInfo}>
-                  <p>
-                    📲 Send <strong>₱{(total * 58).toFixed(2)}</strong> to GCash
-                    number
-                  </p>
-                  <p className={styles.gcashNum}>0917-BLACK-BEAN</p>
-                  <p className={styles.gcashNote}>
-                    Use your name as reference. Screenshot not required — we'll
-                    verify for you. ☕
-                  </p>
-                </div>
               )}
 
               {method === "cash" && (
@@ -452,6 +563,22 @@ export default function OrderModal({ drink, onClose }: Props) {
                 <span>Payment</span>
                 <span style={{ textTransform: "capitalize" }}>{method}</span>
               </div>
+              <div className={styles.receiptRow}>
+                <span>Order type</span>
+                <span>{fulfillment === "dine-in" ? "Dine In" : "Delivery"}</span>
+              </div>
+              {fulfillment === "delivery" && (
+                <>
+                  <div className={styles.receiptRow}>
+                    <span>Address</span>
+                    <span>{deliveryAddress}</span>
+                  </div>
+                  <div className={styles.receiptRow}>
+                    <span>Deliver by</span>
+                    <span>{displayDeliveryTime}</span>
+                  </div>
+                </>
+              )}
 
               <div className={styles.receiptBarcode}>
                 ▐██▌▐█▌▐▌▐██▐█▌▐██▌▐██▌
