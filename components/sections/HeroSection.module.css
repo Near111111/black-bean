@@ -1,7 +1,7 @@
 .hero {
   position: relative;
   min-height: 100vh;
-  overflow: clip; /* was: overflow: hidden */
+  overflow: clip;
   background: radial-gradient(
     ellipse at 65% 50%,
     #7a3810 0%,
@@ -21,8 +21,19 @@
   pointer-events: none;
 }
 
+.videoBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
 .content {
   position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 3.5rem;
@@ -30,6 +41,7 @@
   align-items: center;
   justify-content: space-between;
   min-height: 100vh;
+  gap: 2rem;
 }
 
 /* ── LEFT ── */
@@ -51,13 +63,12 @@
 
 .heading {
   font-family: var(--font-serif);
-  font-size: 3.6rem;
+  font-size: clamp(2rem, 4vw, 3.6rem);
   font-weight: 700;
   line-height: 1.1;
   color: #ffffff;
   margin-bottom: 1.25rem;
   max-width: 480px;
-  white-space: nowrap;
 }
 
 .highlight {
@@ -76,6 +87,7 @@
   display: flex;
   gap: 0.875rem;
   margin-bottom: 4.5rem;
+  flex-wrap: wrap;
 }
 
 .primaryBtn {
@@ -93,6 +105,12 @@
 
 .primaryBtn:hover {
   background: #5c2d0a;
+}
+
+.primaryBtn:focus-visible,
+.secondaryBtn:focus-visible {
+  outline: 2px solid #f5c842;
+  outline-offset: 3px;
 }
 
 .secondaryBtn {
@@ -159,7 +177,6 @@
   pointer-events: none;
 }
 
-/* Remove or rename .heroImage, add this: */
 .heroVideo {
   position: relative;
   z-index: 1;
@@ -168,16 +185,6 @@
   height: auto;
   border-radius: 1rem;
   object-fit: cover;
-}
-
-.videoBg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  z-index: 0;
 }
 
 .tagline {
@@ -190,43 +197,6 @@
   color: rgba(245, 196, 66, 0.35);
   letter-spacing: 0.08em;
   white-space: nowrap;
-}
-
-/* ── RESPONSIVE ── */
-@media (max-width: 1024px) {
-  .heroImage {
-    width: 420px;
-  }
-  .left {
-    flex: 0 0 360px;
-  }
-  .heading {
-    font-size: 3rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .content {
-    flex-direction: column;
-    justify-content: center;
-    padding: 7rem 2rem 3rem;
-    min-height: auto;
-    gap: 2rem;
-  }
-  .left {
-    flex: none;
-    width: 100%;
-  }
-  .right {
-    min-height: 320px;
-    width: 100%;
-  }
-  .heroImage {
-    width: 300px;
-  }
-  .heading {
-    font-size: 2.5rem;
-  }
 }
 
 /* ── MODAL ── */
@@ -260,6 +230,7 @@
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 2rem;
+  gap: 1rem;
 }
 
 .modalEyebrow {
@@ -272,7 +243,7 @@
 
 .modalTitle {
   font-family: var(--font-serif);
-  font-size: 1.75rem;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-weight: 700;
   color: #f5e6c8;
 }
@@ -299,7 +270,7 @@
 
 .modalGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.25rem;
 }
 
@@ -376,11 +347,145 @@
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── RESPONSIVE ── */
+
+@media (max-width: 1280px) {
+  .left { flex: 0 0 380px; }
+  .heroVideo { max-width: 420px; }
+  .glow { width: 400px; height: 400px; }
+}
+
+@media (max-width: 1024px) {
+  .content { padding: 0 2.5rem; gap: 1.5rem; }
+  .left { flex: 0 0 340px; }
+  .heroVideo { max-width: 360px; }
+}
+
+/* Tablet portrait — stack vertically, RIGHT still visible */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5.5rem 1.75rem 3rem;
+    min-height: 100svh;
+    gap: 1.5rem;
+  }
+  .left {
+    flex: none;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+  .heading {
+    max-width: 100%;
+    font-size: clamp(1.6rem, 5.5vw, 2.4rem);
+  }
+  .subtext { max-width: 100%; }
+  .buttons {
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .socials { justify-content: center; }
+
+  /* RIGHT: shrink to content only, no forced height */
+  .right {
+    min-height: unset;
+    height: auto;
+    width: 100%;
+  }
+  .heroVideo { max-width: min(280px, 70vw); }
+  .glow { width: 240px; height: 240px; }
+  .tagline {
+    position: static;
+    text-align: center;
+    display: block;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Mobile ≤ 480px */
+@media (max-width: 480px) {
+  .content {
+    padding: 5rem 1.25rem 2.5rem;
+    gap: 1.25rem;
+    /* KEY FIX: don't force full viewport height on mobile */
+    min-height: unset;
+    height: 100svh;
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .heading {
+    font-size: clamp(1.5rem, 7.5vw, 2rem);
+    margin-bottom: 0.75rem;
+    line-height: 1.15;
+  }
+
+  .subtext {
+    font-size: 0.8rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    margin-bottom: 1.25rem;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+    max-width: 260px;
+    text-align: center;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.85rem;
+  }
+
+  .socials { gap: 0.875rem; }
+
+  /* Hide the right video panel on mobile — bg video already covers */
+  .right { display: none; }
+
+  .modal {
+    padding: 1.25rem;
+    max-height: 90vh;
+    border-radius: 1rem;
+  }
+  .modalGrid { grid-template-columns: 1fr; }
+  .modalBackdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .modal {
+    border-radius: 1.25rem 1.25rem 0 0;
+    max-height: 88vh;
+  }
+}
+
+/* iPhone SE and smaller */
+@media (max-width: 375px) {
+  .content {
+    padding: 4.5rem 1rem 2rem;
+  }
+  .heading {
+    font-size: clamp(1.35rem, 8vw, 1.75rem);
+  }
+  .primaryBtn,
+  .secondaryBtn {
+    max-width: 100%;
+  }
+}

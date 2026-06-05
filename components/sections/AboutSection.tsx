@@ -9,11 +9,12 @@ export default function AboutSection() {
         {/* Row 1 — image left (L-shape: left + bottom), text right */}
         <div className={styles.row}>
           <div className={styles.imageFrame}>
-            {/* SVG L-shape line: vertical left + horizontal bottom */}
             <svg
               className={styles.frameLine}
               viewBox="0 0 276 216"
               preserveAspectRatio="none"
+              aria-hidden="true"
+              focusable="false"
             >
               <path
                 d="M 16 8 L 16 200 L 260 200"
@@ -26,8 +27,10 @@ export default function AboutSection() {
             </svg>
             <img
               src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&q=80"
-              alt="Coffee brewing"
+              alt="Coffee being brewed in a warm café setting"
               className={styles.image}
+              loading="lazy"
+              decoding="async"
             />
           </div>
 
@@ -59,15 +62,18 @@ export default function AboutSection() {
               recharge, or a late-night conversation, we pour more than coffee —
               we pour care, creativity, and community into every cup.
             </p>
-            <button className={styles.exploreBtn}>Explore our menu</button>
+            <button className={styles.exploreBtn} type="button">
+              Explore our menu
+            </button>
           </div>
 
           <div className={styles.imageFrameRight}>
-            {/* SVG L-shape line: horizontal bottom + vertical right */}
             <svg
               className={styles.frameLine}
               viewBox="0 0 276 216"
               preserveAspectRatio="none"
+              aria-hidden="true"
+              focusable="false"
             >
               <path
                 d="M 16 200 L 260 200 L 260 8"
@@ -80,8 +86,10 @@ export default function AboutSection() {
             </svg>
             <img
               src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&q=80"
-              alt="Latte art"
+              alt="Close-up of a beautifully crafted latte art"
               className={styles.image}
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>

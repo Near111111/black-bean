@@ -1,7 +1,7 @@
 .section {
   position: relative;
   background: #c49a50;
-  padding: 4rem 2rem 6rem;
+  padding: clamp(3rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem) clamp(4rem, 8vw, 6rem);
   overflow: hidden;
 }
 
@@ -9,23 +9,25 @@
   position: relative;
   z-index: 1;
   max-width: 560px;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
 }
 
 .title {
   font-family: var(--font-serif);
-  font-size: clamp(1.75rem, 3vw, 2.4rem);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
   font-weight: 700;
   color: #1a0f08;
   margin-bottom: 0.75rem;
+  line-height: 1.25;
 }
 
 .subtitle {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
   line-height: 1.7;
   color: rgba(59, 26, 8, 0.7);
-  margin-bottom: 2rem;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
 }
 
 .form {
@@ -34,15 +36,17 @@
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   max-width: 520px;
+  width: 100%;
   margin: 0 auto;
 }
 
 .input {
   flex: 1;
-  padding: 1rem 1.5rem;
+  min-width: 0;
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem);
   border: none;
   background: #ffffff;
-  font-size: 0.875rem;
+  font-size: clamp(0.8rem, 1.5vw, 0.875rem);
   color: #1a0f08;
   outline: none;
 }
@@ -51,33 +55,44 @@
   color: #a8a29e;
 }
 
+.input:focus {
+  background: #fffdf9;
+}
+
 .submitBtn {
   background: #1a0f08;
   border: none;
-  padding: 1rem 1.75rem;
-  font-size: 0.875rem;
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.1rem, 3vw, 1.75rem);
+  font-size: clamp(0.8rem, 1.5vw, 0.875rem);
   font-weight: 600;
   color: #f5e6c8;
-  transition: background 0.2s;
+  transition: background 0.2s ease;
   white-space: nowrap;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .submitBtn:hover {
   background: #3b1a08;
 }
 
+.submitBtn:focus-visible {
+  outline: 2px solid #f5e6c8;
+  outline-offset: -3px;
+}
+
 .thanks {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2vw, 1rem);
   font-weight: 600;
   color: #1a0f08;
 }
 
+/* Decorative beans */
 .beanTL {
   position: absolute;
   top: -30px;
   left: -40px;
-  width: 220px;
+  width: clamp(120px, 18vw, 220px);
   height: auto;
   opacity: 0.95;
   transform: rotate(-15deg);
@@ -90,11 +105,50 @@
   position: absolute;
   top: -20px;
   right: -30px;
-  width: 200px;
+  width: clamp(110px, 16vw, 200px);
   height: auto;
   opacity: 0.9;
   transform: rotate(10deg) scaleX(-1);
   pointer-events: none;
   mix-blend-mode: multiply;
   z-index: 0;
+}
+
+/* Mobile — stack form vertically */
+@media (max-width: 480px) {
+  .form {
+    flex-direction: column;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .input {
+    border-radius: 0;
+    padding: 0.9rem 1.25rem;
+    text-align: center;
+  }
+
+  .submitBtn {
+    border-radius: 0;
+    padding: 0.9rem 1.25rem;
+    width: 100%;
+  }
+
+  /* Pull beans further off-screen so they don't crowd the text */
+  .beanTL {
+    left: -50px;
+    top: -20px;
+  }
+
+  .beanTR {
+    right: -50px;
+    top: -15px;
+  }
+}
+
+/* Ultrawide */
+@media (min-width: 1400px) {
+  .inner {
+    max-width: 620px;
+  }
 }

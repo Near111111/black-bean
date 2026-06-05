@@ -17,8 +17,20 @@ export default function NewsletterSection() {
 
   return (
     <section id="contact" className={styles.section}>
-      <img src="/beans-no-bg/beans2.png" alt="" className={styles.beanTL} />
-      <img src="/beans-no-bg/beans2.png" alt="" className={styles.beanTR} />
+      <img
+        src="/beans-no-bg/beans2.png"
+        alt=""
+        className={styles.beanTL}
+        aria-hidden="true"
+        draggable={false}
+      />
+      <img
+        src="/beans-no-bg/beans2.png"
+        alt=""
+        className={styles.beanTR}
+        aria-hidden="true"
+        draggable={false}
+      />
 
       <div className={styles.inner}>
         <h2 className={styles.title}>Join the Circle of coffee lovers</h2>
@@ -28,9 +40,11 @@ export default function NewsletterSection() {
         </p>
 
         {subscribed ? (
-          <p className={styles.thanks}>☕ Thank you! Welcome to the circle.</p>
+          <p className={styles.thanks} role="status" aria-live="polite">
+            ☕ Thank you! Welcome to the circle.
+          </p>
         ) : (
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit} className={styles.form} noValidate>
             <input
               type="email"
               placeholder="jane@gmail.com"
@@ -38,6 +52,8 @@ export default function NewsletterSection() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className={styles.input}
+              aria-label="Email address"
+              autoComplete="email"
             />
             <button type="submit" className={styles.submitBtn}>
               Subscribe
